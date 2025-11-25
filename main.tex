@@ -60,9 +60,7 @@
     frame=single,
     numbers=left,
     tabsize=4,
-    captionpos=b,
-    caption={Algoritmo 1 Método de Penalización/Barrera Modificada},
-    label=alg:penalty_barrier_espanol
+    captionpos=b
 }
 
 
@@ -112,8 +110,8 @@
         \LARGE\textsc {}
         \\
         {\LARGE\textsc {Teoría de Autómatas, Lenguajes y Computación - CC321A}}\\
-        {\large \textbf{ Practica Nº4 : }\\
-        {\large \textbf{.....}}
+        {\large \textbf{ Practica Nº4   }\\
+        {\large \textbf{Gramatica Libre de Contexto}}
       
 
 		\vspace{1 mm}
@@ -137,7 +135,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+\section{Gramática libre de Contexto y Generacion de Numeros Aleatorios}
 
 \section*{Gramáticas}
 
@@ -263,6 +261,111 @@ Se recorre cada cadena; si es terminal se agrega al resultado; si es no terminal
 \subsection*{seleccionar(self, left)}
 \noindent Elige aleatoriamente una regla cuyo lado izquierdo sea \textit{left} usando variables de conteo y el generador aleatorio.
 
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Desarrollo de Codigos y Desarrollo de ejemplos paso a paso}
+
+\subsection{Desarrollo de Codigos}
+
+\noindent Se hace la implementacion de las clases, sugueridas en el documento principal. Se tendra tres clases el codigo, los cuales seran:
+
+\begin{itemize}[label=-]
+    \item Clase Aleatoria.
+    \item Clase Regla.
+    \item Clase Gramatica.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent \textbf{Clase Aleatorio - Park-Miller:}
+\begin{lstlisting}
+class Aleatorio:
+    def __init__(self, semilla):
+        self.mod = 2**31 - 1
+        self.a = 16807   # 7^5
+        self.n = semilla
+
+    def siguiente(self):
+        self.n = (self.a * self.n) % self.mod
+        return self.n
+
+    def elegir(self, limite):
+        return self.siguiente() % limite
+\end{lstlisting}\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent \textbf{Clase Regla:}
+\begin{lstlisting}
+class Regla:
+    def __init__(self, izquierda, derecha):
+        self.left = izquierda
+        self.right = derecha
+        self.cont = 1
+
+    def __repr__(self):
+        derecha_str = " ".join(self.right)
+        return f"{self.cont} {self.left} -> {derecha_str}"
+\end{lstlisting}\\
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent \textbf{Clase  Gramatica:}
+\begin{lstlisting}
+class Gramatica:
+    def __init__(self, semilla):
+        self.rng = Aleatorio(semilla)
+        self.reglas = {}   # diccionario: left → tuple (reglas)
+    def regla(self, izquierda, derecha):
+        nueva = Regla(izquierda, derecha)
+        if izquierda not in self.reglas:
+            self.reglas[izquierda] = (nueva,)
+        else:
+            self.reglas[izquierda] = self.reglas[izquierda] + (nueva,)
+    def seleccionar(self, left):
+        reglas = self.reglas[left]
+        total = sum(r.cont for r in reglas)
+        indice = self.rng.elegir(total)
+        acumulado = 0
+        for r in reglas:
+            acumulado += r.cont
+            if indice < acumulado:
+                elegido = r
+                break
+        for r in reglas:  # actualizar cont
+            if r is not elegido:
+                r.cont += 1
+        return elegido.right
+    def generando(self, strings):
+        resultado = ""
+        for s in strings:
+            if s not in self.reglas:           # terminal
+                resultado += s + " "
+            else:                              # no terminal
+                derecha = self.seleccionar(s)
+                resultado += self.generando(derecha)
+        return resultado
+    def generar(self):
+        if "inicio" not in self.reglas and "Inicio" not in self.reglas:
+            raise Exception("No existe regla con 'inicio'")
+        key = "inicio" if "inicio" in self.reglas else "Inicio"
+        return self.generando((key,)).strip()
+\end{lstlisting}\\
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Desarrollo de ejemplos paso a paso}
+
+
+\subsubsection{Desarrollo Gramatica 1}
+
+\subsubsection{Desarrollo Gramatica 2}
+
+\subsubsection{Desarrollo Gramatica 3}
 
 
 

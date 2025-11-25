@@ -1,0 +1,271 @@
+%\documentclass[12pt]{article}
+\documentclass[12pt, twoside, a4paper]{article}
+\usepackage[top=2.54cm, bottom=2.54cm, left=2.54cm, right=2.54cm]{geometry}
+% === Fuente Arial y formato ===
+%\usepackage[scaled=0.92]{helvet} % Helvetica ≈ Arial
+%\renewcommand{\familydefault}{\sfdefault} % Usa fuente sans-serif (Arial)
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{setspace}
+\setstretch{1} % Espaciado simple
+
+\usepackage{amsthm} % Importante para los entornos de teoremas y pruebas
+%\usepackage{amsmath}
+\usepackage{hyperref}
+%\usepackage{amssymb}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{scalefnt}
+\usepackage{enumitem}
+\setlist{nosep}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usepackage{float}
+\usepackage{titlesec} % Opcional para ajustar el estilo de las secciones
+\usepackage{graphicx}
+\usepackage{layout}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\usepackage{minted} % Cargar el paquete minted
+\usepackage[table,xcdraw]{xcolor}
+\usepackage{blindtext}
+\usepackage{geometry}
+\usepackage{placeins}
+\usepackage{subcaption}
+\usepackage{circuitikz}
+\usepackage{steinmetz}
+\usepackage[utf8]{inputenc}   % casi siempre ya está
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\lstset{literate={ε}{{$\varepsilon$}}1 {δ}{{$\delta$}}1  {ξ}{{$\xi$}}1 {≤}{{$\leq$}}1  {ρ}{{$\rho$}}1 {∞}{{$\infty$}}1 {γ}{{$\gamma$}}1 }
+
+\usepackage{xcolor} % Para colores si se desean resaltar elementos
+
+\usepackage{circledsteps}%encerrar un numero con circulo
+\usepackage{ulem}%raya abajo del numero
+\usepackage[spanish]{babel} % Para el idioma español
+\usepackage{xcolor} % Para colores
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    keywordstyle=\color{blue},
+    stringstyle=\color{green!50!black},
+    commentstyle=\color{gray},
+    numberstyle=\color{cyan},
+    identifierstyle=\color{black},
+    backgroundcolor=\color{gray!10},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    tabsize=4,
+    captionpos=b,
+    caption={Algoritmo 1 Método de Penalización/Barrera Modificada},
+    label=alg:penalty_barrier_espanol
+}
+
+
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
+
+
+\usepackage{amsmath}
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{proposition}[theorem]{Proposición}
+\newtheorem{corollary}[theorem]{Corolario}
+\newtheorem{definition}[theorem]{Definición}
+% Personalización del entorno de pruebas con el cuadro en una nueva línea
+\renewenvironment{proof}[1][\textbf{Prueba:}]{\par\noindent#1 \par\vspace{0.5em}}{\par\vspace{1em}\hfill$\Box$\par}
+
+
+
+\geometry{a4paper,left = 24mm,top = 20mm}
+\usepackage{enumerate}
+\usepackage{setspace}
+\usepackage{caption}
+\setstretch{1.5} %
+\usepackage{tikz}
+\usetikzlibrary{er,positioning}
+\setstretch{1.5} 
+\begin{document}
+\begin{titlepage}
+	%\layout
+    \voffset0cm
+	  \begin{center}
+		\vspace*{1 mm}
+        {\LARGE \textbf{UNIVERSIDAD NACIONAL DE}}\\
+            \vspace{3mm} % Aumentamos el espacio vertical
+        {\LARGE \centering\textbf{INGENIERÍA}}\\
+        \vspace{6mm}
+		{\LARGE\textsc {Facultad de Ciencias}}\\
+		\vspace{2 mm}
+
+        {\textsc {Escuela Profesional de Ciencias de la Computación}}\\
+		\vspace{4 mm}
+        \begin{center}
+            \includegraphics[scale = 0.16]{LogoUni.png}
+            
+        \end{center}
+        \LARGE\textsc {}
+        \\
+        {\LARGE\textsc {Teoría de Autómatas, Lenguajes y Computación - CC321A}}\\
+        {\large \textbf{ Practica Nº4 : }\\
+        {\large \textbf{.....}}
+      
+
+		\vspace{1 mm}
+		{\large \textbf{Integrantes:} }\\
+	    {\fontsize{12}{1} \selectfont - Berdiales Diaz, Maurizio - 20202113E }\\
+        {\fontsize{12}{1} \selectfont - Muñoz Diaz, Jose Estalin - 20222718J }\\
+        {\fontsize{12}{1} \selectfont - López Arteaga, César Omar - 20215508C }\\
+        {\fontsize{12}{1} \selectfont - Arévalo Gambini, Alois Diógenes - 20172759J }\\
+         
+
+\vspace{3mm}
+        {\large \textbf{Profesor: Victor Andres Melchor Espinoza}}\\
+        \vspace{1 mm}
+	\end{center}
+\end{titlepage}
+
+\newpage
+    \renewcommand{\contentsname}{Contenido}
+    \tableofcontents
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section*{Gramáticas}
+
+\noindent Las gramáticas utilizadas para este proyecto se denominan gramáticas libres de contexto, en las que cada regla tiene un solo no terminal en el lado izquierdo de la flecha $\rightarrow$.\\
+
+\noindent Considere las siguientes producciones para la gramática $G$:
+\textbf{\textit{}}
+\begin{align*}
+\langle \text{inicio} \rangle 
+    &\rightarrow \langle \text{historia} \rangle . \\[4pt]
+\langle \text{historia} \rangle 
+    &\rightarrow \langle \text{frase} \rangle 
+       \mid \langle \text{frase} \rangle \; \text{y} \; \langle \text{historia} \rangle 
+       \mid \langle \text{frase} \rangle \; \text{sino} \; \langle \text{historia} \rangle \\[4pt]
+\langle \text{frase} \rangle 
+    &\rightarrow \langle \text{articulo} \rangle \;
+       \langle \text{sustantivo} \rangle \;
+       \langle \text{verbo} \rangle \;
+       \langle \text{articulo} \rangle \;
+       \langle \text{sustantivo} \rangle \\[4pt]
+\langle \text{articulo} \rangle 
+    &\rightarrow \text{el} \mid \text{la} \mid \text{al} \\[4pt]
+\langle \text{sustantivo} \rangle 
+    &\rightarrow \text{gato} \mid \text{niño} \mid \text{perro} \mid \text{niña} \\[4pt]
+\langle \text{verbo} \rangle 
+    &\rightarrow \text{perseguía} \mid \text{besaba}
+\end{align*}
+
+\noindent Así, puede generar la siguiente historia empezando del símbolo no terminal $\langle inicio \rangle$:
+
+\begin{quote}
+el gato perseguía al niño y el niño besaba al gato.
+\end{quote}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Enteros PseudoAleatorios}
+
+\noindent El algoritmo de Park--Miller (llamado así por sus inventores) es una forma sencilla de generar una secuencia de términos enteros pseudoaleatorios. Funciona así. Sea $N_0$ un número entero llamado semilla. La semilla es el primer término de la sucesión y debe estar entre $1$ y $2^{31}-2$, inclusive. A partir de la semilla, los términos posteriores $N_1, N_2, \dots$ se producen mediante la siguiente ecuación:
+
+\[
+N_{k+1} = (7^5 N_k) \bmod (2^{31}-1)
+\]
+
+\noindent Aquí $7^5 = 16807$ y $2^{31} = 2147483648$. El operador \% de Python devuelve el resto después de dividir un número entero por otro.\\
+
+
+\noindent Siempre obtendrá la misma secuencia de términos de una semilla determinada. Por ejemplo, si comienza con la semilla $101$, obtendrá una secuencia pseudoaleatoria cuyos primeros términos son:
+
+\[
+1697507,\; 612712738,\; 678900201,\; 695061696,\; 1738368639,\; 
+246698238,\; 1613847356,\; 1214050682.
+\]
+
+\noindent Podría usar esta secuencia para probar si su generador de números aleatorios funciona correctamente.\\
+
+\noindent Los términos de la secuencia pueden ser grandes, pero puede hacerlos más pequeños usando de nuevo el operador \%. Si $N$ es un término de la sucesión y $M$ es un entero mayor que $0$, entonces $N \bmod M$ da un número entero entre $0$ y $M-1$, inclusive. Por ejemplo, si necesita un número entre $0$ y $9$, entonces escribiría $N \bmod 10$.\\
+
+\noindent Escriba una aplicación en Python que genere cadenas aleatorias usando una gramática. Debe implementar las siguientes clases:
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{a.- La clase Aleatorio}
+
+\noindent La primera clase debe denominarse \texttt{Aleatorio} y debe implementar el algoritmo de Park--Miller. Debe tener los siguientes métodos:
+
+\subsection*{\_\_init\_\_(self, semilla)}
+
+\noindent Inicializa una instancia de la clase para que genere la secuencia de enteros pseudoaleatorios que comienzan con \textit{semilla}. La semilla es un entero en el rango adecuado para el algoritmo.
+
+\subsection*{siguiente(self)}
+\noindent Genera el siguiente entero aleatorio en la secuencia y lo devuelve.
+
+\subsection*{elegir(self, limite)}
+\noindent Llama al método \texttt{siguiente} para obtener un número entero aleatorio.  
+Luego calcula un nuevo entero entre $0$ y \texttt{limite}$-1$. Devuelve este nuevo entero.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{b.- La clase Regla}
+
+\noindent Representa una regla de una gramática. Debe tener el siguiente constructor:
+
+\subsection*{\_\_init\_\_(self, izquierda, derecha)}
+\noindent La variable \texttt{self.left} debe ser la cadena del lado izquierdo.  
+La variable \texttt{self.right} debe ser la tupla del lado derecho.  
+La variable \texttt{self.cont} debe inicializarse en el entero $1$.
+
+\subsection*{\_\_repr\_\_(self)}
+\noindent Devuelve una cadena de la forma  
+\[
+"C\; L \rightarrow R_1\; R_2 \dots R_n"
+\]
+donde $C$ es \texttt{self.cont}, $L$ es \texttt{self.left} y $R_i$ son los elementos de \texttt{self.right}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{c.- La clase Gramatica}
+
+\noindent Esta clase implementa una gramática usando reglas como las anteriores.
+
+\subsection*{\_\_init\_\_(self, semilla)}
+\noindent Crea una instancia de \texttt{Aleatorio} usando \textit{semilla}.  
+Define un diccionario vacío para almacenar reglas.
+
+\subsection*{regla(self, izquierda, derecha)}
+\noindent Agrega una nueva regla a la gramática.  
+\textit{izquierda} es la cadena del lado izquierdo.  
+\textit{derecha} es una tupla de cadenas (terminales y no terminales).
+
+\noindent Si la clave no existe, se crea como una tupla con una única regla.  
+Si existe, se agrega al final.
+
+\subsection*{generar(self)}
+\noindent Genera una cadena comenzando desde la regla cuyo lado izquierdo es \texttt{'Inicio'}.  
+Si no existe, genera una excepción.
+
+\subsection*{generando(self, strings)}
+\noindent El parámetro \texttt{strings} es una tupla de cadenas terminales y no terminales.  
+Se recorre cada cadena; si es terminal se agrega al resultado; si es no terminal se selecciona una regla y se genera recursivamente.
+
+\subsection*{seleccionar(self, left)}
+\noindent Elige aleatoriamente una regla cuyo lado izquierdo sea \textit{left} usando variables de conteo y el generador aleatorio.
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\end{document}
